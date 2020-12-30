@@ -1,65 +1,57 @@
-/// v1.1 December 29, 2020
+/// v1.1 Modified December 30, 2020
+import g4p_controls.*;
 
-/// Values you can change ///
-int n = 10; 
-int numRings = round(n/2.0);
+int n; 
+int numRings = 10;
 int padding = 100;
-int gapBetweenRings = 20; // Gap between adjacent square-shaped rings of cells
-int frameRate = 7;
-
+float gapBetweenRings; // Gap between adjacent square-shaped rings of cells
+int frameRate = 5;
 
 PFont f;
+String[] alleleChoices = {"A","a"}; 
 float cellSize;
-String[][] cellsNow = new String[n][n]; 
-String[][] cellsNext = new String[n][n];
-String[] alleleChoices = {"A","a"}; // Genes that determine the cell's genotype 
-                                    // The genotype determines if a cell is green or yellow
-// "A" is the dominant allele while "a" is the recesive allele
-// Each cell's genotype is a combination of two alleles (ex. "Aa", "aa", "AA")
-// Genotypes with at least one "A" (dominant) allele produce a green cell (ex. "AA" or "Aa")
-// Genotypes with two "a" (recessive) alleles produce yellow cell
+Boolean fixation = false;
+Boolean paused;
+Boolean reset;
+float[] cellSizeExtension;
+RingColony[] ringList;
 
-
-float[] cellSizeExtension = new float[round(n/2.0)]; // How much each cell's width or height
-                                                    // needs to be extended by to acommodate 
-                                                    // the gap between the rings
-
-float  startingX, startingY, endingX,endingY; 
-// startingX --> x value of the left side of a given square-shaped ring
-// startingY --> y value of the top side of a given square-shaped ring
-// endingX --> x value of the right side of a given square-shaped ring
-// endingY --> y value of the bottom side of a given square-shaped ring
-
-RingColony[] ringList = new RingColony[numRings];
 
 void setup () {  
  size(800,800);
- background(166,140,99);
- frameRate(frameRate);
- instructionText();
-  
+ createGUI();
+ reset();
+}
+
+void reset() {
+  frameRate(frameRate);
+  background(166,140,99);
+  gapBetweenRings = -1.5*sqrt(numRings) + 12;
+  if (numRings%2==0)
+    n = numRings*2-1;
+  else
+    n = numRings*2;
+ cellSizeExtension = new float[numRings]; 
  computeCellSizeExtension();
  cellSize = (float) (height-2*padding-(n-1)*cellSizeExtension[0])/n;
-
+ ringList = new RingColony[numRings];
  createRings();
- //setCellValuesRandomly();
-   
- 
-
+ paused = false;
+ reset = false;
+ pausedProcedure("normal");
 }
+
 /// Calculates how much the width or height of each square cell needs to be extended by 
 /// to accomodate the gap between the rings.
 void computeCellSizeExtension(){
   int ringSpan; // Length/width of a square-shaped ring (in terms of cells)
-
   if (n%2==0)
     ringSpan = 2;
   else
-    ringSpan = 1;
-  
+    ringSpan = 1;  
   float extension = 0;
   
-  for (int i=round(n/2.0)-1; i>=0; i--) {
+  for (int i=numRings-1; i>=0; i--) {
    cellSizeExtension[i] = extension;
    ringSpan+=2;
    extension = ( (ringSpan-3)*cellSizeExtension[i] + 2*gapBetweenRings ) / float(ringSpan-1); 
@@ -78,44 +70,36 @@ void createRings() {
     startingRow += 1;
     startingCol+=1;
     ringSize -= 2;
-  }
-  
+  }  
 }
 
-void instructionText() {
- f = createFont("Cambria",25);
- textFont(f); 
- fill(0);
- text("Each square-shaped ring represents an isolated colony of organisms",12,30);
- text("One cell = One organism",12,60);
- text("AA or Aa genotype = Green", 12,height-45);
- text("aa genotype = Yellow", 12, height-15);
-}
 
 void draw() {
-  for (int i=0; i<numRings; i++) {
+  fill(166,140,99);
+  noStroke();
+  rect(100,100,600,600);
+  for (int i=0; i<numRings; i++) {  
     int ringPopulation = ringList[i].cells.size();
     for (int j=0; j<ringPopulation; j++) {
       ringList[i].cells.get(j).drawCell();
     }
-    updateCellsWithNextGen(i);
-  }
-  
+    updateCellsWithNextGen(i);    
+  }  
 }
+
 
 void updateCellsWithNextGen(int i) {
   int ringPopulation = ringList[i].cells.size();
-  for (int c=0; c<ringPopulation; c++) {
+  for (int c=0; c<ringPopulation; c++) {   
     if (c<ringPopulation-2) 
       ringList[i].cells.get(c).genotype = computeOffspring( ringList[i].cells.get(c).genotype, ringList[i].cells.get(c+1).genotype);
     else
       ringList[i].cells.get(c).genotype = computeOffspring( ringList[i].cells.get(c).genotype, ringList[i].cells.get(0).genotype);     
-  }
+    } 
   shuffleNextGen(i);
 }
 
 /// Assigns each offspring cell a random spot (index) inside the colony ///
-
 void shuffleNextGen(int i) {
   int ringPopulation = ringList[i].cells.size();
   int newIndex;
@@ -132,7 +116,6 @@ void shuffleNextGen(int i) {
 int[] getColour(String genotype) {
   int[] colour = new int[3];
 
-  
   if (genotype.indexOf("A")==-1) {
     //Yellow
     colour[0] = 238;
@@ -149,16 +132,10 @@ int[] getColour(String genotype) {
 }
 
 String setInitialValues() { // assigns a random genotype to the first generation of cells.
-  
   String allele1 = alleleChoices[round(random(1))];
   String allele2 = alleleChoices[round(random(1))];
-
   return allele1 + allele2;
 }
-
-
-
-
 
 
 /// Computes the offspring cell's genotype ///
@@ -183,4 +160,22 @@ String[] computePossibilities(String p1, String p2) {
   possibilities[3] = listP1[1] + listP2[1];
   
   return possibilities;
+}
+
+void pausedProcedure(String instruction) {
+  if (instruction == "normal") {
+    if (paused) {
+      pauseButton.setText("Resume");
+      pauseButton.setLocalColorScheme(GCScheme.GREEN_SCHEME);
+      noLoop();
+    }
+    else {
+      pauseButton.setText("Pause");
+      pauseButton.setLocalColorScheme(GCScheme.RED_SCHEME);
+      loop();
+    }
+  }
+  else {
+    reset(); 
+  }
 }
