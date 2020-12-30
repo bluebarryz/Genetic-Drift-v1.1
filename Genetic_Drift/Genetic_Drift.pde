@@ -1,4 +1,4 @@
-/// Last Modified: September 30, 2020
+/// v1.1 December 29, 2020
 
 /// Values you can change ///
 int n = 10; 
@@ -111,6 +111,21 @@ void updateCellsWithNextGen(int i) {
     else
       ringList[i].cells.get(c).genotype = computeOffspring( ringList[i].cells.get(c).genotype, ringList[i].cells.get(0).genotype);     
   }
+  shuffleNextGen(i);
+}
+
+/// Assigns each offspring cell a random spot (index) inside the colony ///
+
+void shuffleNextGen(int i) {
+  int ringPopulation = ringList[i].cells.size();
+  int newIndex;
+  String copy;
+  for (int c=0; c<ringPopulation; c++) {
+    newIndex = round(random(0,ringPopulation-1));
+    copy = ringList[i].cells.get(c).genotype;
+    ringList[i].cells.get(c).genotype = ringList[i].cells.get(newIndex).genotype;
+    ringList[i].cells.get(newIndex).genotype = copy;
+  }
 }
  
 /// Computes the cells colour based on its genotype ///
@@ -142,37 +157,8 @@ String setInitialValues() { // assigns a random genotype to the first generation
 }
 
 
-/// Assigns each offspring cell a random spot (index) inside the colony ///
 
-void shuffleNextGen(int startingIndex, int endingIndex, int constantIndex, String isRowOrColumnConstant ) {
-  int r,c;
-  for (int i=startingIndex; i<endingIndex; i++) {
-     int x = round(random(startingIndex,endingIndex-1));
 
-    if (isRowOrColumnConstant == "Row") {
-      r = constantIndex;
-      c = i;
-
-    }
-    else  {
-      r = i;
-      c = constantIndex;
-    }
-    
-    String currentCell = cellsNext[r][c];
-    
-    if (isRowOrColumnConstant == "Row") {
-      cellsNext[r][c] = cellsNext[r][x];
-      cellsNext[r][x] = currentCell;
-    }
-    else {
-     cellsNext[r][c] = cellsNext[x][c];
-     cellsNext[x][c] = currentCell;
-
-    }
-     
-  }  
-}
 
 
 /// Computes the offspring cell's genotype ///
@@ -197,13 +183,4 @@ String[] computePossibilities(String p1, String p2) {
   possibilities[3] = listP1[1] + listP2[1];
   
   return possibilities;
-}
-
-void overWrite() {
-     /// Overwrites current generation with its offspring
-    for (int r=0; r<n; r++) {
-      for (int c=0; c<n; c++) {
-        cellsNow[r][c] = cellsNext[r][c]; 
-      }
-    } 
 }
