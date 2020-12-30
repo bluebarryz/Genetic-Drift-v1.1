@@ -2,6 +2,11 @@ class RingColony {
   
   int number, startingRow, startingCol, ringSize;
   ArrayList <Cell> cells = new ArrayList<Cell>();
+  float  startingX, startingY, endingX,endingY; 
+  // startingX --> x value of the left side of a given square-shaped ring
+  // startingY --> y value of the top side of a given square-shaped ring
+  // endingX --> x value of the right side of a given square-shaped ring
+  // endingY --> y value of the bottom side of a given square-shaped ring
   
   RingColony(int number, int startingRow, int startingCol, int ringSize) {
     this.number = number;
