@@ -13,12 +13,11 @@ class Cell {
     this.genotype = setInitialValues();
   }
   
-  void drawCell() {
-      
+  void drawCell() {      
     getColour();
     fill(colour[0],colour[1],colour[2]);
     stroke(166,140,99);
-  
+ 
     if (orientation == "vertical"){    
       rect(coords.x, coords.y, cellSize, cellSize+cellSizeExtension);      
     }
@@ -27,27 +26,20 @@ class Cell {
     }
   }
   
-  
-  
-  
-
-
-void getColour() {
-  
-  if (genotype.indexOf("A")==-1) {
-    //Yellow
-    colour[0] = 238;
-    colour[1] = 225;
-    colour[2] = 32;
+  void getColour() {    
+    if (genotype.indexOf("A")==-1) {
+      //Yellow
+      colour[0] = 238;
+      colour[1] = 225;
+      colour[2] = 32;
+    }
+    else{
+      //Green
+      colour[0] = 80;
+      colour[1] = 186;
+      colour[2] = 46;
+    }
   }
-  else{
-    //Green
-    colour[0] = 80;
-    colour[1] = 186;
-    colour[2] = 46;
-  }
-
-}
 
 
 }
