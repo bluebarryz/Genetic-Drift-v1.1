@@ -19,10 +19,10 @@ An interactive Genetic Drift simulation (cellular automaton). This is an updated
 
 <h1>Evolution rules</h1>
 <p>The allele combinations (aka genotypes) of the first generation are set randomly. For all subsequent generations, each cell mates with its clockwise neighbour to produce one offspring cell.</p>
-<img src="readme/evolution rules.png" alt="evolution rules" width=600 height=450>
+<img src="readme/evolution rules.PNG" alt="evolution rules" width=600 height=450>
 
 <p>The genotypes of the offspring are determined by the genotypes of its parents. However, since there are 4 possible (though not necessarily distinct) genotypes that can result from each reproduction, the genotype of the offspring is selected randomly from the four possibilities.</p>
-<img src="readme/offspring cell.png" alt="offspring cell" width=600 height=450>
+<img src="readme/offspring cell.PNG" alt="offspring cell" width=600 height=450>
 
 <p>Once the genotypes of the offspring generation are set, the offspring are assigned a random spot (aka index) inside their ring-shaped colony. In the next frame, the offspring of the offspring are displayed and the cycle repeats.</p>
 
