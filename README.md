@@ -27,5 +27,5 @@ An interactive Genetic Drift simulation (cellular automaton). This is an updated
 <p>Once the genotypes of the offspring generation are set, the offspring are assigned a random spot (aka index) inside their ring-shaped colony. In the next frame, the offspring of the offspring are displayed and the cycle repeats.</p>
 
 <h1>Sample evolution</h1>
-<img src="readme/sample evo.png" alt="sample evo" width=799 height=393>
+<img src="readme/sample evo.PNG" alt="sample evo" width=799 height=393>
 
