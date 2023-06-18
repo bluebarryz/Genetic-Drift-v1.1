@@ -1,5 +1,6 @@
 # Genetic-Drift-v1.1
-An interactive Genetic Drift simulation (cellular automaton). This is an updated version of https://github.com/bluebarryz/Genetic-Drift with improvements in the code (implementation of objects), and usability (addition of a user-interface).
+An interactive Genetic Drift simulation implemented as a cellular automaton.
+
 <h1>Motivation</h1>
 <p>I became curious about the phenomenon of genetic drift through biology class. In particular, I wanted to explore its effects on different population sizes, which motivated me to do this project.</p>
 <h1>Demo</h1>
